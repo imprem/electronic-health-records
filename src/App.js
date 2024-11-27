@@ -10,7 +10,17 @@ import Sidebar from './Admin/Sidebar';
 import Scheduling from './Admin/Scheduling';
 import Reports from './Admin/Reports';
 import Logout from './Logout';
-import DoctorDashboard from './Doctor/DoctorDashboard';
+import DoctorDashboard from './Doctor/Dashboard/DoctorDashboard';
+import Doc_sidebar from './Doctor/Sidebar/Doc_sidebar';
+import Patients from './Doctor/Patients/Patients';
+import Doc_scheduling from './Doctor/Scheduling/Doc_scheduling';
+import Doc_reports from './Doctor/Reports/Doc_reports';
+import Patient_sidebar from './Patient/Patient_sidebar/Patient_sidebar';
+import PatientDashboard from './Patient/Dashboard/PatientDashboard';
+import Appointments from './Patient/Appointments/Appointments';
+import Medical_bills from './Patient/Medical Bills/Medical_bills';
+import Medical_records from './Patient/Medical records/Medical_records';
+import Medications from './Patient/Medications/Medications';
 
 const AdminLayout = ({ children }) => (
   <>
@@ -25,8 +35,18 @@ const AdminLayout = ({ children }) => (
 const DoctorLayout = ({ children }) => (
   <>
     <Navbar />
-    <Sidebar />
-    <div style={{ marginLeft: '250px', padding: '1rem' }}>
+    <Doc_sidebar />
+    <div style={{ marginLeft: '300px', padding: '1rem' }}>
+      {children}
+    </div>
+  </>
+);
+
+const PatientLayout = ({ children }) => (
+  <>
+    <Navbar />
+    <Patient_sidebar />
+    <div style={{marginLeft: '300px', padding: '1rem'}}>
       {children}
     </div>
   </>
@@ -68,6 +88,47 @@ function App() {
             <DoctorLayout>
               <DoctorDashboard />
             </DoctorLayout>
+          } />
+          <Route path="/doctor/patients" element={
+            <DoctorLayout>
+              <Patients />
+            </DoctorLayout>
+          } />
+          <Route path='/doctor/scheduling' element={
+            <DoctorLayout>
+              <Doc_scheduling />
+            </DoctorLayout>
+          } />
+          <Route path='/doctor/report' element={
+            <DoctorLayout>
+              <Doc_reports />
+            </DoctorLayout>
+          } />
+          
+          <Route path='/patients' element={
+            <PatientLayout>
+              <PatientDashboard />
+            </PatientLayout>
+          } />
+          <Route path='/patients/appointments' element={
+            <PatientLayout>
+              <Appointments />
+            </PatientLayout>
+          } />
+          <Route path='/patients/medical_bills' element={
+            <PatientLayout>
+              <Medical_bills />
+            </PatientLayout>
+          } />
+          <Route path='/patients/medical_records' element={
+            <PatientLayout>
+              <Medical_records />
+            </PatientLayout>
+          } />
+          <Route path='/patients/medications' element={
+            <PatientLayout>
+              <Medications />
+            </PatientLayout>
           } />
           <Route path="/user" element={<Register />} />
           <Route path="/logout" element={<Logout />} />

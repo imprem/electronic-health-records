@@ -37,7 +37,7 @@ function Login() {
         }else if(userResponse.data[0].ROLE === 'Doctor'){
           navigate('/doctor');
         }else{
-          navigate('/user');
+          navigate('/patients');
         }
       }else{
         Swal.fire({
