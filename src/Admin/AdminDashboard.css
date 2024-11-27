@@ -1,0 +1,19 @@
+.dashboard-container {
+  padding: 16px;
+}
+
+.dashboard-title {
+  margin-bottom: 16px;
+}
+
+.dashboard-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 130px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-button {
+  margin-top: 12px;
+}

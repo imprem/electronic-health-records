@@ -16,9 +16,14 @@ function Register() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
 
   const handleGenderChange = (event) => {
     setGender(event.target.value);
+  };
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
   };
 
   function disconnectFromMetaMask() {
@@ -39,6 +44,7 @@ function Register() {
       phone,
       email,
       password,
+      role,
       publicKey: account
     };
 
@@ -80,6 +86,16 @@ function Register() {
                       <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="name">Name</label>
                         <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} className="form-control form-control-lg"/>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <label className="form-label" htmlFor="role">Role</label>
+                        <select id="role" value={role} onChange={handleRoleChange} className="form-control form-control-lg">
+                          <option value="">Select a role</option>
+                          <option value="Admin">Admin</option>
+                          <option value="Doctor">Doctor</option>
+                          <option value="Patient">Patient</option>
+                        </select>
                       </div>
 
                       <div>

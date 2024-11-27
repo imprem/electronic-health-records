@@ -1,0 +1,62 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 10px 20px;
+    color: #ecf0f1;
+  }
+  
+  .navbar-logo h2 {
+    margin: 0;
+  }
+  
+  .navbar-search input {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .navbar-search input:focus {
+    outline: none;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-time-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 20px;
+    font-size: 14px;
+  }
+  
+  .navbar-icon {
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  .navbar-icon:hover {
+    color: #3498db;
+  }
+  
+  .navbar-profile img {
+    width: 50px;
+    height: 70px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-search {
+      display: none; /* Hide search on smaller screens */
+    }
+  
+    .navbar-time-date {
+      display: none; /* Hide time and date on smaller screens */
+    }
+  }  
