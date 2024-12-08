@@ -1,0 +1,39 @@
+.container {
+    padding: 20px;
+}
+  
+h2 {
+    margin-bottom: 20px;
+}
+  
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+  
+.header {
+    background-color: #b6d5f5;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ccc;
+}
+  
+.cell {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+  
+.even-row {
+    background-color: #f9f9f9;
+}
+  
+.odd-row {
+    background-color: #ffffff;
+}
+  
+.action-button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}  

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Navbar.css';
+import logo from '../src/img/logo.png';
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -16,7 +17,7 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <h2>MyLogo</h2>
+        <img src={logo} alt="User Profile" />
       </div>
 
       {/* Search Bar */}
@@ -39,7 +40,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-profile">
-          <img src="https://via.placeholder.com/40" alt="User Profile" />
+          <img src={props.icon} alt="User Profile" />
         </div>
       </div>
     </nav>

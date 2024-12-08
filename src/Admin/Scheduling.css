@@ -1,0 +1,109 @@
+/* General container styling */
+.scheduling-container {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    color: #333;
+  }
+  
+  .scheduling-container h1 {
+    text-align: center;
+    color: #007bff;
+  }
+  
+  /* Calendar Section */
+  .calendar-section {
+    display: inline-block;
+    width: 30%;
+    vertical-align: top;
+    padding: 10px;
+  }
+  
+  .custom-calendar {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  /* Day Overview Section */
+  .day-overview {
+    display: inline-block;
+    width: 65%;
+    vertical-align: top;
+    padding: 10px;
+  }
+  
+  .day-overview h2 {
+    font-size: 1.5rem;
+    color: #444;
+  }
+  
+  .day-schedule {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .appointment-block {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: calc(50% - 10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .appointment-block p {
+    margin: 5px 0;
+  }
+  
+  /* Appointments List Table */
+  .appointments-list {
+    margin-top: 20px;
+  }
+  
+  .appointments-list table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .appointments-list th, .appointments-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .appointments-list th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .appointments-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .appointments-list tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Action Buttons */
+  .action-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 8px;
+  }
+  
+  .action-button.view {
+    color: #007bff;
+  }
+  
+  .action-button.edit {
+    color: #ffc107;
+  }
+  
+  .action-button.delete {
+    color: #dc3545;
+  }
+  

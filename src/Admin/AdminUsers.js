@@ -14,8 +14,7 @@ function AdminUsers() {
           setLoading(true);
           setError("");
           try {
-            console.log('hhhhhhh:: ', selectedTab);
-            // const response = await axios.get(`${process.env.REACT_APP_API}/usersbyrole/${selectedTab.toLowerCase()}`);
+            console.log('The Selected tab is:: ', selectedTab);
             const response = await axios.get(`${process.env.REACT_APP_API}/usersbyrole`, {
                 params: {
                     role: selectedTab.toLowerCase()

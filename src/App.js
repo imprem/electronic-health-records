@@ -21,10 +21,13 @@ import Appointments from './Patient/Appointments/Appointments';
 import Medical_bills from './Patient/Medical Bills/Medical_bills';
 import Medical_records from './Patient/Medical records/Medical_records';
 import Medications from './Patient/Medications/Medications';
+import doctor from '../src/img/doc.png';
+import admin from '../src/img/admin.png';
+import patient from '../src/img/patnt.png';
 
 const AdminLayout = ({ children }) => (
   <>
-    <Navbar />
+    <Navbar icon={admin} />
     <Sidebar />
     <div style={{ marginLeft: '250px', padding: '1rem' }}>
       {children}
@@ -34,7 +37,7 @@ const AdminLayout = ({ children }) => (
 
 const DoctorLayout = ({ children }) => (
   <>
-    <Navbar />
+    <Navbar icon={doctor}/>
     <Doc_sidebar />
     <div style={{ marginLeft: '300px', padding: '1rem' }}>
       {children}
@@ -44,9 +47,9 @@ const DoctorLayout = ({ children }) => (
 
 const PatientLayout = ({ children }) => (
   <>
-    <Navbar />
+    <Navbar icon={patient}/>
     <Patient_sidebar />
-    <div style={{marginLeft: '300px', padding: '1rem'}}>
+    <div style={{marginLeft: '250px', padding: '1rem'}}>
       {children}
     </div>
   </>

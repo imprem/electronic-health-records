@@ -1,0 +1,19 @@
+.apply-appointments-container {
+    padding: 24px;
+}
+
+.apply-appointments-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comments-field {
+    width: 100%;
+    resize: vertical;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
