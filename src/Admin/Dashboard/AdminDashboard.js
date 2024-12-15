@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Button, Dialog } from "@mui/material";
-import AddNewPractice from '../UtilityComponent/AddNewPractice';
-import AddNewUser from '../UtilityComponent/AddNewUser';
-import AddNewPrescription from '../UtilityComponent/AddNewPrescription';
-import AddNewLab from '../UtilityComponent/AddNewLab';
-import AddNewDoctor from '../UtilityComponent/AddNewDoctor';
-import AddNewNurse from '../UtilityComponent/AddNewNurse';
+import AddNewPractice from '../../UtilityComponent/AddNewPractice';
+import AddNewUser from '../../UtilityComponent/AddNewUser';
+import AddNewPrescription from '../../UtilityComponent/AddNewPrescription';
+import AddNewLab from '../../UtilityComponent/AddNewLab';
+import AddNewDoctor from '../../UtilityComponent/AddNewDoctor';
+import AddNewNurse from '../../UtilityComponent/AddNewNurse';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -27,10 +27,10 @@ const AdminDashboard = () => {
   };
 
   const dashboardData = [
-    { title: "Your Practice", buttonText: "Add a New Practice", key: 1 },
+    // { title: "Your Practice", buttonText: "Add a New Practice", key: 1 },
     { title: "Your Patients", buttonText: "Add a New User", key: 2 },
-    { title: "E-Prescribing", buttonText: "Add a New Prescription", key: 3 },
-    { title: "Labs", buttonText: "Add a New Lab", key: 4 },
+    // { title: "E-Prescribing", buttonText: "Add a New Prescription", key: 3 },
+    // { title: "Labs", buttonText: "Add a New Lab", key: 4 },
     { title: "Doctors", buttonText: "Add a New Doctor", key: 5 },
     { title: "Nurses", buttonText: "Add a New Nurse", key: 6 },
   ];

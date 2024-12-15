@@ -30,9 +30,9 @@ const Sidebar = () => {
       >
         Billing
       </NavLink>
-      <NavLink to="/admin/report" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+      {/* <NavLink to="/admin/report" className={({ isActive }) => (isActive ? 'active-link' : '')}>
         Reports
-      </NavLink>
+      </NavLink> */}
 
       <NavLink 
         to="/logout" 
