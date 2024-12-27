@@ -1,124 +1,98 @@
-/* ProfileDashboard.css */
-
+/* General Styles */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-  }
-  
-  .profile-dashboard {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Profile Section */
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eef2f7;
+}
+
+/* Dashboard Container */
+.profile-dashboard {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Card Styles */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Profile Card */
+.profile-card {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-details h2 {
+  margin: 0 0 10px;
+  color: #2c3e50;
+}
+
+.profile-details p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 20px;
+  background-color: #2ecc71;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Section Styles */
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #34495e;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  margin: 8px 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+ul li strong {
+  color: #2c3e50;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
   .profile-card {
-    display: flex;
-    /* align-items: center; */
-    gap: 20px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
   }
-  
-  .profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .profile-details {
-    flex-grow: 1;
-  }
-  
-  .profile-details h2 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .status {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-top: 5px;
-  }
-  
-  .status.active {
-    background-color: #28a745;
-    color: #fff;
-  }
-  
-  /* Insurance Section */
-  .insurance-info {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .insurance-info p {
-    margin: 5px 0;
-    font-size: 16px;
-    color: #555;
-  }
-  
-  /* Table Sections */
-  h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  table th, table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  table th {
-    background-color: #f1f1f1;
-    color: #555;
-  }
-  
-  table td {
-    color: #333;
-  }
-  
-  table tbody tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  /* Buttons */
-  button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
-    margin-right: 5px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+}

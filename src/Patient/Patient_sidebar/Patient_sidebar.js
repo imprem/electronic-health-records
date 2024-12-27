@@ -18,6 +18,9 @@ const Patient_sidebar = () => {
           >
             Appointments
           </NavLink>
+          <NavLink to="/patients/medications" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+            Medications
+          </NavLink>
           <NavLink 
             to="/patients/medical_bills" 
             className={({ isActive }) => (isActive ? 'active-link' : '')}
@@ -26,9 +29,6 @@ const Patient_sidebar = () => {
           </NavLink>
           <NavLink to="/patients/medical_records" className={({ isActive }) => (isActive ? 'active-link' : '')}>
             Medical records
-          </NavLink>
-          <NavLink to="/patients/medications" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-            Medications
           </NavLink>
           <NavLink 
             to="/logout" 

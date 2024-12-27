@@ -21,9 +21,9 @@ const Navbar = (props) => {
       </div>
 
       {/* Search Bar */}
-      <div className="navbar-search">
+      {/* <div className="navbar-search">
         <input type="text" placeholder="Search..." />
-      </div>
+      </div> */}
 
       <div className="navbar-right">
         <div className="navbar-time-date">

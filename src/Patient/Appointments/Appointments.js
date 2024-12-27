@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -14,11 +14,48 @@ import {
   Dialog,
   Paper,
 } from "@mui/material";
-import Applyappointments from "./Applyappointments"; // Import your Applyappointments component
+import Applyappointments from "./Applyappointments";
+import axios from "axios";
 
 const Appointments = () => {
   const [filter, setFilter] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [appointmentss, setAppointments] = useState([]);
+  const [userId, setUserID] = useState(0);
+
+  const fetchAppointments = async (user_id) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/patient/getappointment/${user_id}`
+      );
+      console.log("Appointments fetched: ", response.data);
+      if (Array.isArray(response.data)) {
+        setAppointments(response.data);
+      } else {
+        console.error("Invalid data format: Expected an array");
+      }
+    } catch (error) {
+      console.error("Error fetching appointments:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user_address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/user/getuserid/${user_address}`
+        );
+        setUserID(response.data);
+        console.log("User ID fetched: ", response.data);
+        fetchAppointments(response.data);
+      } catch (error) {
+        console.error("Error fetching user ID:", error.message);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -28,84 +65,15 @@ const Appointments = () => {
     setOpenDialog(true);
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = async () => {
     setOpenDialog(false);
+    await fetchAppointments(userId);
   };
 
-  const appointments = [
-    {
-      id: 1,
-      visitType: "Urgent",
-      clinician: "Dr. Branch",
-      provider: "Stephanie Branch",
-      location: "SOUTH MEDICAL CENTER",
-      date: "05/28/2020",
-      duration: "30 min",
-      comments: "ASAP",
-      insurance: "Check",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      visitType: "Follow-Up",
-      clinician: "Dr. Collins",
-      provider: "Stephanie Branch",
-      location: "SOUTH MEDICAL CENTER",
-      date: "05/29/2020",
-      duration: "30 min",
-      comments: "-",
-      insurance: "Check",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      visitType: "Follow-Up",
-      clinician: "Dr. Sallivan",
-      provider: "Jimmy Sallivan",
-      location: "NORTH MEDICAL CENTER",
-      date: "06/03/2020",
-      duration: "30 min",
-      comments: "-",
-      insurance: "Check",
-      status: "Pending",
-    },
-    {
-      id: 4,
-      visitType: "Chronic Care",
-      clinician: "Dr. Meizer",
-      provider: "Melissa Meizer",
-      location: "SOUTH MEDICAL CENTER",
-      date: "06/07/2020",
-      duration: "45 min",
-      comments: "-",
-      insurance: "Check",
-      status: "Unconfirmed",
-    },
-    {
-      id: 5,
-      visitType: "Annual Medicare Wellness",
-      clinician: "Dr. Branch",
-      provider: "Stephanie Branch",
-      location: "SOUTH MEDICAL CENTER",
-      date: "06/10/2020",
-      duration: "60 min",
-      comments: "-",
-      insurance: "Check",
-      status: "Unconfirmed",
-    },
-    {
-      id: 6,
-      visitType: "New Symptom",
-      clinician: "Dr. Velaskez",
-      provider: "Cris Velaskez",
-      location: "NORTH MEDICAL CENTER",
-      date: "06/15/2020",
-      duration: "30 min",
-      comments: "-",
-      insurance: "Check",
-      status: "Unconfirmed",
-    },
-  ];
+  const isoToDateInput = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toISOString().split("T")[0];
+  };
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -125,9 +93,9 @@ const Appointments = () => {
           displayEmpty
           sx={{ minWidth: 150 }}
         >
-          <MenuItem value="">Select</MenuItem>
+          <MenuItem value="">All</MenuItem>
+          <MenuItem value="Scheduled">Scheduled</MenuItem>
           <MenuItem value="Pending">Pending</MenuItem>
-          <MenuItem value="Unconfirmed">Unconfirmed</MenuItem>
         </Select>
         <Button variant="contained" color="primary" onClick={handleDialogOpen}>
           Apply For Appointment
@@ -148,40 +116,52 @@ const Appointments = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {appointments
-              .filter((appointment) =>
-                filter ? appointment.status === filter : true
-              )
-              .map((appointment) => (
-                <TableRow key={appointment.id}>
-                  <TableCell>{appointment.id}</TableCell>
-                  <TableCell>{appointment.visitType}</TableCell>
-                  <TableCell>{appointment.clinician}</TableCell>
-                  <TableCell>{appointment.location}</TableCell>
-                  <TableCell>{appointment.date}</TableCell>
-                  <TableCell>{appointment.duration}</TableCell>
-                  <TableCell>{appointment.comments}</TableCell>
+            {Array.isArray(appointmentss) && appointmentss.length > 0 ? (
+              appointmentss
+                .filter((appt) =>
+                  filter ? appt.STATUS.toLowerCase() === filter.toLowerCase() : true
+                )
+                .map((appt) => (
+                  <TableRow key={appt.APPOINTMENT_ID}>
+                  <TableCell>{appt.APPOINTMENT_ID}</TableCell>
+                  <TableCell>{appt.VISIT}</TableCell>
+                  <TableCell>{appt.DOCTOR_NAME}</TableCell>
+                  <TableCell>{appt.LOCATION}</TableCell>
+                  <TableCell>{isoToDateInput(appt.APPOINTMENT_DATE)}</TableCell>
+                  <TableCell>{appt.DURATION}</TableCell>
+                  <TableCell>{appt.COMMENTS}</TableCell>
                   <TableCell>
                     <Typography
                       sx={{
-                        color:
-                          appointment.status === "Pending"
-                            ? "green"
-                            : "orange",
-                      }}
+                      color: appt.STATUS === "Scheduled" ? "green" : "orange",
+                    }}
                     >
-                      {appointment.status}
+                      {appt.STATUS}
                     </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+                ))
+                ) : (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    No Appointments Found
+                  </TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </Table>
       </TableContainer>
 
       {/* Dialog for Applyappointments */}
-      <Dialog open={openDialog} onClose={() => {}} fullWidth>
-        <Applyappointments onClose={handleDialogClose} />
+      <Dialog 
+        open={openDialog} 
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick") {
+            handleDialogClose();
+          }
+        }}
+        fullWidth>
+        <Applyappointments onClose={handleDialogClose} userId={userId} />
       </Dialog>
     </Box>
   );

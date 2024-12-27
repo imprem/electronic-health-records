@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
-import { AddNewNurses } from '../Services/dbServices';
+import { AddNewNurses } from '../Services/addUsersServices';
 
 const AddNewNurse = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -10,12 +10,10 @@ const AddNewNurse = ({ onClose }) => {
     department: "",
     contactNumber: "",
     email: "",
-    dateOfBirth: "",
     gender: "",
     qualifications: "",
-    yearsOfExperience: "",
   });
-
+  
   // Handle input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -67,16 +65,6 @@ const AddNewNurse = ({ onClose }) => {
           onChange={handleChange}
         />
         <TextField
-          label="Date of Birth"
-          name="dateOfBirth"
-          type="date"
-          variant="outlined"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-        />
-        <TextField
           label="Contact Number"
           name="contactNumber"
           variant="outlined"
@@ -113,15 +101,6 @@ const AddNewNurse = ({ onClose }) => {
           variant="outlined"
           fullWidth
           value={formData.qualifications}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Years of Experience"
-          name="yearsOfExperience"
-          type="number"
-          variant="outlined"
-          fullWidth
-          value={formData.yearsOfExperience}
           onChange={handleChange}
         />
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>

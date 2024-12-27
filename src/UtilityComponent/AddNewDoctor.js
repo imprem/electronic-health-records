@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Alert } from "@mui/material";
-import { AddRecord } from '../Services/dbServices';
+import { AddRecord } from '../Services/addUsersServices';
 
 const AddNewDoctor = ({ onClose }) => {
+
   const [formData, setFormData] = useState({
     name: "",
     specialization: "",
     contactNumber: "",
     email: "",
-    dateOfBirth: "",
     gender: "",
     qualifications: "",
-    yearsOfExperience: "",
-    clinicHospitalName: "",
   });
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -80,16 +78,6 @@ const AddNewDoctor = ({ onClose }) => {
           onChange={handleChange}
         />
         <TextField
-          label="Date of Birth"
-          name="dateOfBirth"
-          type="date"
-          variant="outlined"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-        />
-        <TextField
           select
           label="Gender"
           name="gender"
@@ -110,23 +98,6 @@ const AddNewDoctor = ({ onClose }) => {
           variant="outlined"
           fullWidth
           value={formData.qualifications}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Years of Experience"
-          name="yearsOfExperience"
-          type="number"
-          variant="outlined"
-          fullWidth
-          value={formData.yearsOfExperience}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Clinic/Hospital Name"
-          name="clinicHospitalName"
-          variant="outlined"
-          fullWidth
-          value={formData.clinicHospitalName}
           onChange={handleChange}
         />
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>

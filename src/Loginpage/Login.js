@@ -7,7 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import logimg from '../image/logimg.png';
 import axios from 'axios';
 import { connectToMetaMask } from '../Services/connectToMetaMask'
-import { getUserDetailsByPublickey } from '../Services/dbServices'
+import { getUserDetailsByPublickey } from '../Services/addUsersServices'
 
 function Login() {
   const [email, setEmail] = useState('');

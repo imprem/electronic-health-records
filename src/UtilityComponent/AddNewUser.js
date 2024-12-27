@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
-import { AddNewPatient } from '../Services/dbServices'
+import { AddNewPatient } from '../Services/addUsersServices'
 
 const AddNewUser = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);

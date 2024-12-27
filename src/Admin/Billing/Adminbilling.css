@@ -124,12 +124,12 @@
 
 .modal-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 10px;
 }
 
 .save-button, .cancel-button {
-    padding: 8px 12px;
+    padding: 8px 18px;
     border: none;
     border-radius: 5px;
     cursor: pointer;

@@ -2,27 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function CreateAppointment({ onClose, onSubmit, onInputChange }) {
-    // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-    // const openCreateModal = () => {
-    //     setIsCreateModalOpen(true);
-    // };
-    
-    // const closeCreateModal = () => {
-    //     setIsCreateModalOpen(false);
-    // };
-
-    // const handleCreateSubmit = (e) => {
-    //     e.preventDefault();
-    //     axios.post(`${process.env.REACT_APP_API}/createappointment`)
-    //       .then((response) => {
-    //         fetchAppointments(selectedDate); // Refresh appointments
-    //         closeCreateModal();
-    //     })
-    //       .catch((error) => {
-    //         console.error('Error creating appointment:', error);
-    //     });
-    // };
 
     return (
         <div className="modal">

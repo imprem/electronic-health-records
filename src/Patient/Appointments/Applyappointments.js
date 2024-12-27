@@ -1,33 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Applyappointments.css";
 import { Box, TextField, Button, Typography, Select, MenuItem } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
+import axios from "axios";
+import { applyForAppointment } from '../../Services/appointmentService';
+import { createAppointment } from "../../Services/patientServices";
+import { getAllDoctors } from "../../Services/getUsersServices";
 
-const Applyappointments = ({ onClose = () => {} }) => {
-  const [visitType, setVisitType] = useState("");
-  const [status, setStatus] = useState("");
+const Applyappointments = ({ onClose = () => {}, userId }) => {
+  const [visitType, setVisitType] = useState([]);
+  const [doctors, setDoctor] = useState([]);
+
+  const [selectedVisitType, setSelectedVisitType] = useState("");
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [doctorAddress, setDoctorAddress] = useState("");
+  const [status, setStatus] = useState("Pending");
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [allDoctors, setAllDoctors] = useState([]);
+  const [comments, setComments] = useState("");
+  const [duration, setDuration] = useState(0);
 
-  const visitTypeOptions = [
-    "Urgent",
-    "New Symptom Visit",
-    "Annual Medicare Wellness Visit",
-    "Follow-Up Visit",
-    "Chronic Care Visit",
-  ];
+  const fetchDoctor = async () => {
+    try{
+      const doctors = await getAllDoctors();
+      setAllDoctors(doctors);
+      
+    }catch(error){
+      console.log('Error Fetching doctoe', error);
+    }
+  }
 
-  const statusOptions = ["Pending", "Unconfirmed"];
+  useEffect(() => {
+    fetchDoctor();
+  }, []);
 
-  const handleSubmit = () => {
-    console.log("Visit Type:", visitType);
-    console.log("Status:", status);
-    console.log("Date:", selectedDate);
-    console.log("Time:", selectedTime);
-    onClose(); // Close the dialog on save
+  useEffect(() => {
+    const filterDoctor = allDoctors.find((doctor) => doctor.name === selectedDoctor);
+    if(filterDoctor){
+      setDoctorAddress(filterDoctor.doctorAddress);
+    }else{
+      setDoctorAddress("");
+    }
+  }, [selectedDoctor]);
+
+  const handleSubmit = async () => {
+    console.log('Doctor and their Address ::', selectedDoctor, doctorAddress);
+    console.log("Date       ::", isoToDateInput(selectedDate));
+    console.log("Time       ::", timeTodateInput(selectedTime));
+    console.log('Comment    ::', comments);
+    console.log("Status     ::", status);
+    console.log("duration   ::", duration)
+    await createAppointment(doctorAddress,  isoToDateInput(selectedDate), timeTodateInput(selectedTime), duration, status, comments);
+    onClose();
   };
+
+  const isoToDateInput = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toISOString().split("T")[0];
+  };
+
+  const timeTodateInput = (isTime) => {
+    const date = new Date(isTime);
+    return date.toLocaleTimeString("en-GB", { hour12: false });
+  }
 
   return (
     <Box className="apply-appointments-container">
@@ -35,29 +73,23 @@ const Applyappointments = ({ onClose = () => {} }) => {
         Apply for Appointment
       </Typography>
       <Box component="form" className="apply-appointments-form">
-        {/* Visit Type Dropdown */}
-        <Select
-          value={visitType}
-          onChange={(e) => setVisitType(e.target.value)}
-          displayEmpty
+        {/* Clinician Field */}
+        <Select 
+          value={selectedDoctor}
+           onChange={(e) => setSelectedDoctor(e.target.value)}
+           displayEmpty
           fullWidth
           sx={{ minWidth: 120 }}
         >
           <MenuItem value="" disabled>
-            Select Visit Type
+            Select Doctor
           </MenuItem>
-          {visitTypeOptions.map((type, index) => (
-            <MenuItem key={index} value={type}>
-              {type}
+          {allDoctors.map((type, index) => (
+            <MenuItem key={index} value={type.name}>
+              {type.name}
             </MenuItem>
           ))}
         </Select>
-
-        {/* Clinician Field */}
-        <TextField label="Clinician" variant="outlined" fullWidth />
-
-        {/* Location Field */}
-        <TextField label="Location" variant="outlined" fullWidth />
 
         {/* Date Picker */}
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -79,6 +111,8 @@ const Applyappointments = ({ onClose = () => {} }) => {
           />
         </LocalizationProvider>
 
+        <TextField label="Duration" variant="outlined" onChange={(e) => setDuration(e.target.value)} fullWidth/>
+
         {/* Comments Field */}
         <TextField
           label="Comments"
@@ -88,25 +122,9 @@ const Applyappointments = ({ onClose = () => {} }) => {
           minRows={4}
           maxRows={6}
           className="comments-field"
+          onChange={(e) => setComments(e.target.value)}
         />
-
-        {/* Status Dropdown */}
-        <Select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          displayEmpty
-          fullWidth
-          sx={{ minWidth: 120 }}
-        >
-          <MenuItem value="" disabled>
-            Select Status
-          </MenuItem>
-          {statusOptions.map((stat, index) => (
-            <MenuItem key={index} value={stat}>
-              {stat}
-            </MenuItem>
-          ))}
-        </Select>
+        <TextField label="Status" value={status} variant="outlined" fullWidth InputProps={{ readOnly: true }} className="readonly-input" />
 
         {/* Buttons */}
         <Box className="form-buttons">
@@ -117,7 +135,7 @@ const Applyappointments = ({ onClose = () => {} }) => {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
-            disabled={!visitType || !status || !selectedDate || !selectedTime}
+            disabled={!selectedDate || !selectedTime}
           >
             Save
           </Button>

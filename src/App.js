@@ -24,6 +24,7 @@ import Medications from './Patient/Medications/Medications';
 import doctor from '../src/img/doc.png';
 import admin from '../src/img/admin.png';
 import patient from '../src/img/patnt.png';
+import AttendPatient from './Doctor/Patients/AttendPatient';
 
 const AdminLayout = ({ children }) => (
   <>
@@ -100,6 +101,11 @@ function App() {
           <Route path='/doctor/scheduling' element={
             <DoctorLayout>
               <Doc_scheduling />
+            </DoctorLayout>
+          } />
+          <Route path='/doctor/attend-patient' element={
+            <DoctorLayout>
+              <AttendPatient />
             </DoctorLayout>
           } />
           <Route path='/doctor/report' element={

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import './Adminbilling.css';
 import axios from "axios";
 import EditBilling from "./EditBilling";
+import CreateBilling from "./CreateBilling";
 
 function AdminBilling() {
     const [selectedFilter, setSelectedFilter] = useState("All");
     const [records, setRecords] = useState([]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentRecord, setCurrentRecord] = useState(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const fetchBillingData = async () => {
         try {
@@ -49,6 +51,7 @@ function AdminBilling() {
     const handleFieldChange = (e) => {
         const { name, value } = e.target;
         setCurrentRecord({ ...currentRecord, [name]: value });
+        console.log("currentRecord :: ",currentRecord);
     };
 
     const handleSaveChanges = async () => {
@@ -72,6 +75,27 @@ function AdminBilling() {
         setCurrentRecord(null);
     };
 
+    const openCreateModal = () => {
+        setIsCreateModalOpen(true);
+    };
+
+    const closeCreateModal = () => {
+        setIsCreateModalOpen(false);
+    };
+
+    const handleCreateSubmit = (e) => {
+        e.preventDefault();
+        console.log('The current record :: ', currentRecord)
+        axios.post(`${process.env.REACT_APP_API}/billing/addbilling`, currentRecord)
+          .then((response) => {
+            fetchBillingData(); // Refresh appointments
+            closeCreateModal();
+        })
+          .catch((error) => {
+            console.error('Error while adding bill :', error);
+        });
+    }
+
     return (
         <div className="table-container">
             <h2>Billing</h2>
@@ -84,7 +108,7 @@ function AdminBilling() {
                     <option value="Credit Card">Credit Card</option>
                     <option value="Cash">Cash</option>
                 </select>
-                <button className="add-button">Add a New Bill</button>
+                <button className="add-button" onClick={openCreateModal}>Add a New Bill</button>
             </div>
 
             <table className="billing-table">
@@ -143,6 +167,15 @@ function AdminBilling() {
                     record={currentRecord}
                     onSave={handleSaveChanges}
                     onClose={closeEditModal}
+                    onChange={handleFieldChange}
+                />
+            )}
+
+            {/* Create Model */}
+            {isCreateModalOpen && (
+                <CreateBilling 
+                    onSubmit={handleCreateSubmit}
+                    onClose={closeCreateModal}
                     onChange={handleFieldChange}
                 />
             )}
