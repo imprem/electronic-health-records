@@ -1,24 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAllAppointment, getDoctorDetails } from "../../Services/getUsersServices";
+import { BigNumber } from 'ethers';
+import { updateAppointmentStatus } from "../../Services/patientServices";
 
 function Doc_scheduling() {
-    const [appointments, setAppointments] = useState([
-        {
-            APPOINTMENT_ID: "1",
-            PATIENT: "Arjun kk",
-            DOCTOR: "Dr. Ranjeet",
-            TIME: "10:00 AM",
-            DURATION: 30,
-            STATUS: "Pending",
-        },
-        {
-            APPOINTMENT_ID: "2",
-            PATIENT: "Ram sing",
-            DOCTOR: "Dr. Ranjeet",
-            TIME: "12:00 AM",
-            DURATION: 30,
-            STATUS: "Pending",
-        },
-    ]);
+    const [allAppointment, setAllAppointment] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const fetchAppointments = async () => {
+        try{
+          const appointment = await getAllAppointment();
+          console.log('appointment :: ', appointment);
+          setAllAppointment(appointment);
+          
+          const doctor = await getDoctorDetails();
+          console.log('Doctor name :: ', doctor[1]);
+
+          const filteredAppointments = appointment.filter(
+            (appt) => appt[2] === doctor[1] 
+          );
+      
+          console.log(' =======> Filtered Appointments :: ', filteredAppointments);
+          setAppointments(filteredAppointments); 
+        }catch(error){
+          console.log('Error Fetching doctoe', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchAppointments();
+    }, []);
+
+    const handleAccept = async (appt) => {
+        console.log('### Accept button is clicked!!!');
+        const appiAddress = appt.appiAddress;
+        const newStatus = 'Scheduled';
+        console.log('appiAddress :: ', appiAddress);
+        await updateAppointmentStatus(appiAddress, newStatus);
+    };
+
+    const handleReject = async (appt) => {
+        console.log('### Reject button is clicked!!!');
+        const appiAddress = appt.appiAddress;
+        const newStatus = 'Cancelled';
+        console.log('appiAddress :: ', appiAddress);
+        await updateAppointmentStatus(appiAddress, newStatus);
+    };
 
     return (
         <div className="scheduling-container">
@@ -28,7 +54,7 @@ function Doc_scheduling() {
                         <tr>
                             <th>ID</th>
                             <th>Patient Name</th>
-                            <th>Doctor</th>
+                            <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -37,21 +63,21 @@ function Doc_scheduling() {
                     <tbody>
                         {appointments.map((appt, index) => (
                             <tr key={index}>
-                                <td>{appt.APPOINTMENT_ID}</td>
-                                <td>{appt.PATIENT}</td>
-                                <td>{appt.DOCTOR}</td>
+                                <td>{BigNumber.from(appt.appointmentID._hex).toNumber()}</td>
+                                <td>{appt.patientName}</td>
+                                <td>{appt.date}</td>
                                 <td>
-                                    {appt.TIME} ({appt.DURATION} min duration)
+                                    {appt.time} ({BigNumber.from(appt.duration._hex).toNumber()} min duration)
                                 </td>
-                                <td>{appt.STATUS}</td>
+                                <td>{appt.status}</td>
                                 <td>
-                                    <button className="action-button accept">
+                                    <button className="action-button accept" onClick={() => handleAccept(appt)}>
                                         <span role="img" aria-label="accept">
                                             ✅
                                         </span>{" "}
                                         Accept
                                     </button>
-                                    <button className="action-button reject">
+                                    <button className="action-button reject" onClick={() => handleReject(appt)}>
                                         <span role="img" aria-label="reject">
                                             ❌
                                         </span>{" "}

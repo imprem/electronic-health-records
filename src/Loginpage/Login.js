@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import '../Loginpage/login.css';
@@ -8,6 +8,7 @@ import logimg from '../image/logimg.png';
 import axios from 'axios';
 import { connectToMetaMask } from '../Services/connectToMetaMask'
 import { getUserDetailsByPublickey } from '../Services/addUsersServices'
+import { getAllDoctors, getAllPatients, getDoctorDetails, getPatientsByAddress } from '../Services/getUsersServices';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -15,6 +16,27 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
+  const [docAdd, setDocAdd] = useState('');
+  const [patAdd, setPatAdd] = useState('');
+
+  const fetchData = async () => {
+          try {
+              const doc = await getDoctorDetails();
+              console.log('### Doc :: ', doc);
+              console.log('##@ ', doc[6]); 
+              setDocAdd(doc[6]);
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+  
+      useEffect(() => {
+          const fetchAsyncData = async () => {
+              await fetchData();
+          };
+  
+          fetchAsyncData();
+      }, [docAdd]);
 
   function disconnectFromMetaMask() {
     setAccount(null);
@@ -24,6 +46,13 @@ function Login() {
   async function handleReconnect() {
     disconnectFromMetaMask();
     let address = await connectToMetaMask();
+    if(address === '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'){
+      navigate("/admin");
+    }else if(address === docAdd){
+      navigate('/doctor');
+    }else{
+      navigate('/patients');
+    }
     setAccount(address);
   }
   
@@ -82,7 +111,7 @@ function Login() {
                         <button className="btn btn-dark btn-lg btn-block" id='key-btn' type="button" onClick={handleReconnect}>Select public key</button>
                       </div>
 
-                      <div className="form-outline mb-4">
+                      {/* <div className="form-outline mb-4">
                         <input type="email" id="email" onChange={(e) => setEmail(e.target.value)} className="form-control form-control-lg"/>
                         <label className="form-label" htmlFor="email">
                           Email address
@@ -96,13 +125,13 @@ function Login() {
 
                       <div className="pt-1 mb-4">
                         <button className="btn btn-dark btn-lg btn-block" type="submit">Login</button>
-                      </div>
-                      <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+                      </div> */}
+                      {/* <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
                         Don't have an account?{' '}
                         <Link to="/register" style={{ color: '#393f81' }}>
                           Register here
                         </Link>
-                      </p>
+                      </p> */}
                       <a href="#!" className="small text-muted">
                         Terms of use.
                       </a>

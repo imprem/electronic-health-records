@@ -47,7 +47,7 @@ const Medications = () => {
             <th>Medication Name</th>
             <th>Quantity</th>
             <th>Condition</th>
-            <th>Provider</th>
+            {/* <th>Provider</th> */}
             <th>Prescribed</th>
             <th>Renew By</th>
           </tr>
@@ -67,7 +67,8 @@ const Medications = () => {
                   : "N/A"}
               </td>
               <td>{medication.condition}</td>
-              <td>{providerNames[medication.provider][1] || "Loading..."}</td>
+              {/* <td></td> */}
+              {/* <td>{providerNames[medication.provider][1] || "Loading..."}</td> */}
               <td>
                 {medication.prescribedDate && medication.prescribedDate._hex
                   ? new Date(BigNumber.from(medication.prescribedDate._hex).toNumber() * 1000).toLocaleDateString()

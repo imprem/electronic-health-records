@@ -16,14 +16,14 @@ const initializeBlockchain = async () => {
         provider = new ethers.providers.Web3Provider(window.ethereum);
         signer = provider.getSigner();
         
-        const ehrsContractAddress = process.env.REACT_APP_EHRS_CONTRACT_ADDRESS;
-        if (!ehrsContractAddress) {
-            throw new Error('EHR contract address not found in environment variables.');
-        }
+        // const ehrsContractAddress = process.env.REACT_APP_EHRS_CONTRACT_ADDRESS;
+        // if (!ehrsContractAddress) {
+        //     throw new Error('EHR contract address not found in environment variables.');
+        // }
 
         // Initialize EHR contract
-        deployedEHRContract = new ethers.Contract(ehrsContractAddress, ehrabi.abi, signer);
-        console.log("EHR Contract Initialization done...");
+        // deployedEHRContract = new ethers.Contract(ehrsContractAddress, ehrabi.abi, signer);
+        // console.log("EHR Contract Initialization done...");
 
         const appointmentsContractAddress = process.env.REACT_APP_APPOINTMENT_CONTRACT_ADDRESS;
         if (!appointmentsContractAddress) {
@@ -41,27 +41,14 @@ const initializeBlockchain = async () => {
 
 initializeBlockchain();
 
-export const createAppointment = async (doctorAddress, date, time, duration, status, comments) => {
-    const userAddress1 = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
-    const doctorAddress1 = '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC';
-    const date1 ='121';
-    const time1 = '10:10';
-    const duration1 ='10';
-    const comments1 ='hhhh';
-
-    console.log('### Create Appointment ::');
-    console.log('Patient Address ::', userAddress1);
-    console.log('Doctor Address  ::', doctorAddress1);
-    console.log('Date            ::', date1);
-    console.log('Time            ::', time1);
-    console.log('Duration        ::', duration1);
-    console.log('Status          ::', status);
-    console.log('Comments        ::', comments1);
-
-    if (!deployedAppointmentManager || !deployedAppointmentManager.createAppointment) {
-        console.error('AppointmentManager contract is not initialized properly.');
-        return { success: false, error: 'Contract not initialized.' };
-    }
+export const createAppointments = async (selectedPatient, selectedDoctor, date, time, duration, comments) => {
+    console.log('### Create New Appointment handle submit');
+    console.log('Doctor Name     :: ', selectedDoctor);
+    console.log('Patient Name    :: ', selectedPatient);
+    console.log('Time            :: ', time);
+    console.log('Date            :: ', date);
+    console.log('Duration        :: ', duration);
+    console.log('Comments        :: ', comments);
 
     try {
         Swal.fire({
@@ -74,25 +61,10 @@ export const createAppointment = async (doctorAddress, date, time, duration, sta
         });
 
         // Call the smart contract function
-        // const txResponse = await deployedAppointmentManager.createAppointment(
-        //     userAddress,
-        //     doctorAddress,
-        //     date,
-        //     time,
-        //     duration,
-        //     comments,
-        //     { gasLimit: ethers.utils.hexlify(500000) } // Gas limit as a hex value
-        // );
-
-        const txResponse = await deployedAppointmentManager.createAppointment(
-            userAddress1,
-            doctorAddress1,
-            date1,
-            time1,
-            duration1,
-            comments1,
+        const txResponse = await deployedAppointmentManager.scheduleAppointment(userAddress, selectedPatient, selectedDoctor, date, time, duration, comments,
             { gasLimit: ethers.utils.hexlify(500000) } // Gas limit as a hex value
         );
+       
         // Wait for the transaction to be mined
         const receipt = await txResponse.wait();
 
@@ -122,3 +94,53 @@ export const createAppointment = async (doctorAddress, date, time, duration, sta
         return { success: false, error: error };
     }
 }
+
+export const updateAppointmentStatus = async (appiAddress, newStatus) => {
+    console.log('### Update Appointment Status !!');
+    console.log('Appointment address :: ', appiAddress);
+    console.log('New Status :: ', newStatus);
+
+    try{
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please confirm the transaction in MetaMask and wait while we register the appointment.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        // Call the smart contract function
+        const txResponse = await deployedAppointmentManager.updateAppointmentStatus(appiAddress, newStatus,
+            { gasLimit: ethers.utils.hexlify(500000) } // Gas limit as a hex value
+        );
+       
+        // Wait for the transaction to be mined
+        const receipt = await txResponse.wait();
+
+        Swal.close();
+        Swal.fire({
+            title: 'Success!',
+            text: `Status successfully updated. Transaction hash: ${receipt.transactionHash}`,
+            allowOutsideClick: false,
+            icon: 'success',
+        });
+
+        console.log('Transaction hash:', receipt.transactionHash);
+        return {
+            success: true,
+            txHash: receipt.transactionHash,
+        };
+    }catch(error){
+        Swal.close();
+        Swal.fire({
+            title: 'Error!',
+            text: 'Error during Update ststus!!',
+            allowOutsideClick: false,
+            icon: 'error',
+        });
+
+        console.error('Error during Update ststus:', error);
+        return { success: false, error: error };
+    }
+};

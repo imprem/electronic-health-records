@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Select,
-  MenuItem,
-  Button,
-  Dialog,
-  Paper,
-} from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, Button, Dialog, Paper,} from "@mui/material";
 import Applyappointments from "./Applyappointments";
 import axios from "axios";
+import { getAllAppointment, getPatientsByAddress } from "../../Services/getUsersServices";
+import { BigNumber } from 'ethers';
 
 const Appointments = () => {
   const [filter, setFilter] = useState("");
@@ -23,39 +11,38 @@ const Appointments = () => {
   const [appointmentss, setAppointments] = useState([]);
   const [userId, setUserID] = useState(0);
 
-  const fetchAppointments = async (user_id) => {
+  const fetchAppointments = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/patient/getappointment/${user_id}`
+      const appointment = await getAllAppointment();
+      console.log('SSSSSSSS ### :: ', appointment);
+
+      const patients = await getPatientsByAddress();
+      console.log('Patient details :: ', patients[1]);
+      const patientName = patients[1];
+      console.log('Patient details :: ', patientName);
+      const filteredAppointments = appointment.filter(
+        (appt) => appt[1] === patientName 
       );
-      console.log("Appointments fetched: ", response.data);
-      if (Array.isArray(response.data)) {
-        setAppointments(response.data);
-      } else {
-        console.error("Invalid data format: Expected an array");
-      }
+  
+      console.log(' =======> Filtered Appointments :: ', filteredAppointments);
+      setAppointments(filteredAppointments); 
+
     } catch (error) {
       console.error("Error fetching appointments:", error.message);
     }
   };
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const user_address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/user/getuserid/${user_address}`
-        );
-        setUserID(response.data);
-        console.log("User ID fetched: ", response.data);
-        fetchAppointments(response.data);
-      } catch (error) {
-        console.error("Error fetching user ID:", error.message);
-      }
-    };
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      await fetchAppointments();
+    } catch (error) {
+      console.error("Error fetching appointments:", error.message);
+    }
+  };
 
-    fetchUserId();
-  }, []);
+  fetchData(); // Call the async function
+}, []); // Dependencies remain the same
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -87,7 +74,7 @@ const Appointments = () => {
           marginBottom: 2,
         }}
       >
-        <Select
+        {/* <Select
           value={filter}
           onChange={handleFilterChange}
           displayEmpty
@@ -96,7 +83,7 @@ const Appointments = () => {
           <MenuItem value="">All</MenuItem>
           <MenuItem value="Scheduled">Scheduled</MenuItem>
           <MenuItem value="Pending">Pending</MenuItem>
-        </Select>
+        </Select> */}
         <Button variant="contained" color="primary" onClick={handleDialogOpen}>
           Apply For Appointment
         </Button>
@@ -105,11 +92,10 @@ const Appointments = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>#</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Visit Type</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Appointment ID</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Clinician</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Location</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Time</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Duration</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Comments</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
@@ -122,21 +108,20 @@ const Appointments = () => {
                   filter ? appt.STATUS.toLowerCase() === filter.toLowerCase() : true
                 )
                 .map((appt) => (
-                  <TableRow key={appt.APPOINTMENT_ID}>
-                  <TableCell>{appt.APPOINTMENT_ID}</TableCell>
-                  <TableCell>{appt.VISIT}</TableCell>
-                  <TableCell>{appt.DOCTOR_NAME}</TableCell>
-                  <TableCell>{appt.LOCATION}</TableCell>
-                  <TableCell>{isoToDateInput(appt.APPOINTMENT_DATE)}</TableCell>
-                  <TableCell>{appt.DURATION}</TableCell>
-                  <TableCell>{appt.COMMENTS}</TableCell>
+                  <TableRow key={appt}>
+                  <TableCell>{BigNumber.from(appt.appointmentID._hex).toNumber()}</TableCell>
+                  <TableCell>{appt.doctorName}</TableCell>
+                  <TableCell>{isoToDateInput(appt.date)}</TableCell>
+                  <TableCell>{appt.time}</TableCell>
+                  <TableCell>{BigNumber.from(appt.duration).toNumber()}</TableCell>
+                  <TableCell>{appt.comments}</TableCell>
                   <TableCell>
                     <Typography
                       sx={{
-                      color: appt.STATUS === "Scheduled" ? "green" : "orange",
+                      color: appt.status === "Scheduled" ? "green" : "orange",
                     }}
                     >
-                      {appt.STATUS}
+                      {appt.status}
                     </Typography>
                   </TableCell>
                 </TableRow>

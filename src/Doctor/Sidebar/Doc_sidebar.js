@@ -24,9 +24,9 @@ const Doc_sidebar = () => {
       >
         Scheduling
       </NavLink>
-      <NavLink to="/doctor/report" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+      {/* <NavLink to="/doctor/report" className={({ isActive }) => (isActive ? 'active-link' : '')}>
         Reports
-      </NavLink>
+      </NavLink> */}
 
       <NavLink 
         to="/logout" 

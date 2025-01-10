@@ -15,32 +15,27 @@ const ViewAppointment = ({ appt, onClose }) => {
                 <form>
                     <label>
                         Patient Name:
-                        <input type="text" name="name" value={appt.PATIENT} readOnly />
+                        <input type="text" name="name" value={appt.patientName} readOnly />
                     </label>
                     <label>
                         Doctor:
-                        <input type="text" name="doctor" value={appt.DOCTOR} readOnly />
-                    </label>
-                    <label>
-                        Time:
-                        <input type="time" name="time" value={appt.TIME} readOnly />
-                    </label>
-                    <label>
-                        Duration (minutes):
-                        <input type="number" name="duration" value={appt.DURATION} readOnly />
-                    </label>
-                    <label>
-                        Visit Type:
-                        <input type="text" name="type" value={appt.TYPE} readOnly />
+                        <input type="text" name="doctor" value={appt.doctorName} readOnly />
                     </label>
                     <label>
                         Date:
-                        <input
-                            type="date"
-                            name="appointment_date"
-                            value={isoToDateInput(appt.APPOINTMENT_DATE)}
-                            readOnly
-                        />
+                        <input type="date" name="date" value={appt.date} readOnly />
+                    </label>
+                    <label>
+                        Time:
+                        <input type="time" name="time" value={appt.time} readOnly />
+                    </label>
+                    <label>
+                        Duration (minutes):
+                        <input type="number" name="duration" value={appt.duration} readOnly />
+                    </label>
+                    <label>
+                        Status:
+                        <input type="text" name="type" value={appt.status} readOnly />
                     </label>
                     <div className="modal-actions">
                         <button type="button" onClick={onClose}>

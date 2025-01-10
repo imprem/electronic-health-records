@@ -5,9 +5,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import axios from "axios";
-import { applyForAppointment } from '../../Services/appointmentService';
-import { createAppointment } from "../../Services/patientServices";
-import { getAllDoctors } from "../../Services/getUsersServices";
+// import { applyForAppointment } from '../../Services/appointmentService';
+// import { createAppointments } from "../../Services/patientServices";
+import { getAllDoctors, getPatientsByAddress } from "../../Services/getUsersServices";
+import { createAppointments } from "../../Services/patientServices";
 
 const Applyappointments = ({ onClose = () => {}, userId }) => {
   const [visitType, setVisitType] = useState([]);
@@ -15,6 +16,7 @@ const Applyappointments = ({ onClose = () => {}, userId }) => {
 
   const [selectedVisitType, setSelectedVisitType] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [patient, setPatients] = useState("");
   const [doctorAddress, setDoctorAddress] = useState("");
   const [status, setStatus] = useState("Pending");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -28,6 +30,10 @@ const Applyappointments = ({ onClose = () => {}, userId }) => {
       const doctors = await getAllDoctors();
       setAllDoctors(doctors);
       
+      const patients = await getPatientsByAddress();
+      console.log('Patient details :: ', patients[1]);
+      const patientName = patients[1];
+      setPatients(patientName);
     }catch(error){
       console.log('Error Fetching doctoe', error);
     }
@@ -47,13 +53,14 @@ const Applyappointments = ({ onClose = () => {}, userId }) => {
   }, [selectedDoctor]);
 
   const handleSubmit = async () => {
-    console.log('Doctor and their Address ::', selectedDoctor, doctorAddress);
+    console.log('Doctor     ::', selectedDoctor);
+    console.log('Patient     ::', patient);
     console.log("Date       ::", isoToDateInput(selectedDate));
     console.log("Time       ::", timeTodateInput(selectedTime));
     console.log('Comment    ::', comments);
     console.log("Status     ::", status);
     console.log("duration   ::", duration)
-    await createAppointment(doctorAddress,  isoToDateInput(selectedDate), timeTodateInput(selectedTime), duration, status, comments);
+    await createAppointments(patient, selectedDoctor, isoToDateInput(selectedDate), timeTodateInput(selectedTime), duration, comments);
     onClose();
   };
 
@@ -91,6 +98,7 @@ const Applyappointments = ({ onClose = () => {}, userId }) => {
           ))}
         </Select>
 
+        <TextField label="Patient name" value={patient} variant="outlined" fullWidth InputProps={{ readOnly: true }} className="readonly-input" />
         {/* Date Picker */}
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker

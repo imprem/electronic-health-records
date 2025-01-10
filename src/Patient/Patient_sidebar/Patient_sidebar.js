@@ -21,12 +21,12 @@ const Patient_sidebar = () => {
           <NavLink to="/patients/medications" className={({ isActive }) => (isActive ? 'active-link' : '')}>
             Medications
           </NavLink>
-          <NavLink 
+          {/* <NavLink 
             to="/patients/medical_bills" 
             className={({ isActive }) => (isActive ? 'active-link' : '')}
           >
             Medical Bills
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/patients/medical_records" className={({ isActive }) => (isActive ? 'active-link' : '')}>
             Medical records
           </NavLink>

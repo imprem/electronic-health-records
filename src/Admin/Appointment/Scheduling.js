@@ -5,6 +5,9 @@ import axios from "axios";
 import ViewAppointment from "./ViewAppointment";
 import EditAppointment from "./EditAppointment";
 import CreateAppointment from "./CreateAppointment";
+import { Dialog } from "@mui/material";
+import { getAllAppointment } from "../../Services/getUsersServices";
+import { BigNumber } from 'ethers';
 
 function Scheduling() {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -14,13 +17,21 @@ function Scheduling() {
     const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    const fetchAppointments = (date) => {
+    const fetchAppointments = async (date) => {
         const formattedDate = date.toISOString().split("T")[0];
         console.log('formattedDate::', formattedDate);
-        axios
-            .get(`${process.env.REACT_APP_API}/appointmentsbydate?date=${formattedDate}`)
-            .then((response) => setAppointments(response.data))
-            .catch((error) => console.error("Error fetching appointments:", error));
+        const appointment = await getAllAppointment();
+        console.log('SSSSSSSS ### :: ', appointment);
+        
+        const filteredAppointments = appointment.filter((item) => {
+            const appointmentDate = item[3]; // Assuming the date is at index 3 in the array.
+            return appointmentDate === formattedDate;
+        });
+
+        console.log('Filtered Appointments::', filteredAppointments);
+        setAppointments(filteredAppointments);
+
+        // setAppointments(appointment);
     };
 
     useEffect(() => {
@@ -105,7 +116,9 @@ function Scheduling() {
         <div className="scheduling-container">
             <div className="scheduling-header">
                 <h1 className="scheduling-title">Scheduling</h1>
-                <button className="create-button" onClick={openCreateModal}>Create New Appointment</button>
+                <button className="create-button" onClick={openCreateModal}>
+                    Create New Appointment
+                </button>
             </div>
             <div className="scheduling-header">
                 <div className="calendar-section">
@@ -121,10 +134,10 @@ function Scheduling() {
                         {appointments.map((appt, index) => (
                             <div key={index} className="appointment-block">
                                 <p>
-                                    <strong>{appt.PATIENT}</strong>
+                                    <strong>{appt.patientName}</strong>
                                 </p>
-                                <p>{appt.TYPE}</p>
-                                <p>{appt.TIME}</p>
+                                <p>{appt.status}</p>
+                                <p>{appt.time}</p>
                             </div>
                         ))}
                     </div>
@@ -134,28 +147,30 @@ function Scheduling() {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Appointment ID</th>
                             <th>Patient Name</th>
                             <th>Doctor</th>
+                            <th>Date</th>
                             <th>Time</th>
-                            <th>Visit Type</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {appointments.map((appt) => (
                             <tr key={appt.id}>
-                                <td>{appt.APPOINTMENT_ID}</td>
-                                <td>{appt.PATIENT}</td>
-                                <td>{appt.DOCTOR}</td>
+                                <td>{BigNumber.from(appt.appointmentID._hex).toNumber()}</td>
+                                <td>{appt.patientName}</td>
+                                <td>{appt.doctorName}</td>
+                                <td>{appt.date}</td>
                                 <td>
-                                    {appt.TIME} ({appt.DURATION} min duration)
+                                    {appt.time} ({BigNumber.from(appt.duration._hex).toNumber()} min duration)
                                 </td>
-                                <td>{appt.TYPE}</td>
+                                <td>{appt.status}</td>
                                 <td>
                                     <button className="action-button view" onClick={() => handleViewAppointment(appt)}>👁️</button>
-                                    <button className="action-button edit" onClick={() => openEditModal(appt)}>✏️</button>
-                                    <button className="action-button delete" onClick={() => deleteByID(appt)}>❌</button>
+                                    {/* <button className="action-button edit" onClick={() => openEditModal(appt)}>✏️</button> */}
+                                    {/* <button className="action-button delete" onClick={() => deleteByID(appt)}>❌</button> */}
                                 </td>
                             </tr>
                         ))}
@@ -165,24 +180,34 @@ function Scheduling() {
                     <ViewAppointment appt={selectedAppointment} onClose={closeViewModal} />
                 )}
             </div>
-            {isEditModalOpen && currentAppointment && (
+            {/* {isEditModalOpen && currentAppointment && (
                 <EditAppointment
                     appt={currentAppointment}
                     onClose={closeEditModal}
                     onSubmit={handleEditSubmit}
                     onInputChange={handleInputChange}
                 />
-            )}
+            )} */}
 
-            {/* Create Modal */}
-            {isCreateModalOpen && (
+            {/* Create Appointment Modal */}
+            <Dialog open={isCreateModalOpen} onClose={(event, reason) => {
+                    if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+                        closeCreateModal();
+                    }
+                }}
+                disableEscapeKeyDown
+                sx={{
+                    "& .MuiDialog-paper": {
+                    width: "600px", // Adjust this value for the desired width
+                    maxWidth: "90%", // Ensures responsiveness
+                    },
+                }}
+            >
                 <CreateAppointment
-                    appointment={currentAppointment}
                     onClose={closeCreateModal}
                     onSubmit={handleCreateSubmit}
-                    onInputChange={handleInputChange}
                 />
-            )}
+            </Dialog>
         </div>
     );
 }

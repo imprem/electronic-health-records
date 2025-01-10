@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import imgic from '../../image/imgic.png';
-import { getDoctorDetails } from '../../Services/getUsersServices';
+import { getAllAppointment, getDoctorDetails } from '../../Services/getUsersServices';
 import { BigNumber } from 'ethers';
 
 function DoctorDashboard() {
@@ -10,22 +10,40 @@ function DoctorDashboard() {
     const [gender, setGender] =useState('');
     const [qualification, setQualification] = useState('');
     const [specialization, setSpecialization] = useState('');
+    const [appointments, setAppointments] = useState([]);
 
     const fetchData = async () => {
-        const doc = await getDoctorDetails();
-        console.log('### Doc :: ', doc);
-        setDocId(BigNumber.from(doc[0]?._hex || '0').toNumber());
-        setName(doc[1] || 'N/A');
-        setEmail(doc[3] || 'N/A');
-        setGender(doc[2] || 'N/A');
-        setQualification(doc[4] || 'N/A');
-        setSpecialization(doc[5] || 'N/A');
-    }
+        try {
+            const doc = await getDoctorDetails();
+            console.log('### Doc :: ', doc);
+            console.log('##@ ', doc[6]);
+
+            setDocId(BigNumber.from(doc[0]?._hex || '0').toNumber());
+            setName(doc[1] || 'N/A');
+            setEmail(doc[3] || 'N/A');
+            setGender(doc[2] || 'N/A');
+            setQualification(doc[4] || 'N/A');
+            setSpecialization(doc[5] || 'N/A');
+
+            const appointment = await getAllAppointment();
+            const filteredAppointments = appointment.filter(
+                (appt) => appt[2] === doc[1] 
+            );
+
+            console.log('### Filtered Appointments :: ', filteredAppointments);
+            setAppointments(filteredAppointments); 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
+        const fetchAsyncData = async () => {
+            await fetchData();
+        };
 
-        fetchData();
-    }, []);
+        fetchAsyncData();
+    }, [name]);
 
     return (
         <div className="profile-dashboard">
@@ -71,8 +89,16 @@ function DoctorDashboard() {
             <div className="card appointments">
                 <h3>Upcoming Appointments</h3>
                 <ul>
-                    <li><strong>Patient Name : Arjun sinsh</strong> 01/15/2025 at 10:30 AM</li>
-                    <li><strong>Annual Eye Checkup:</strong> 02/20/2025 at 02:00 PM</li>
+                    {appointments.length > 0 ? (
+                        appointments.map((appointment, index) => (
+                        <li key={index}>
+                        <strong>Patient Name:</strong> {appointment.patientName}{" "}
+                        <strong>Date:</strong> <span>{appointment.date} at {appointment.time}</span>
+                        </li>
+                    ))
+                    ) : (
+                    <li>No upcoming appointments</li>
+                )}
                 </ul>
             </div>
 

@@ -71,13 +71,13 @@ export const addMedication = async (id, name, gender, age, patientAddress, medic
         // Wait for the transaction to be mined
         await txResponse.wait();
         
-        Swal.close();
-        Swal.fire({
-            title: 'Success!',
-            text: `Medication added successfully. Transaction hash: ${txResponse.hash}`,
-            allowOutsideClick: false,
-            icon: 'success',
-        });
+        // Swal.close();
+        // Swal.fire({
+        //     title: 'Success!',
+        //     text: `Medication added successfully. Transaction hash: ${txResponse.hash}`,
+        //     allowOutsideClick: false,
+        //     icon: 'success',
+        // });
         
         console.log('Transaction hash:', txResponse.hash);
         

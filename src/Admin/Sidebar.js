@@ -24,12 +24,12 @@ const Sidebar = () => {
       >
         Scheduling
       </NavLink>
-      <NavLink 
+      {/* <NavLink 
         to="/admin/billing" 
         className={({ isActive }) => (isActive ? 'active-link' : '')}
       >
         Billing
-      </NavLink>
+      </NavLink> */}
       {/* <NavLink to="/admin/report" className={({ isActive }) => (isActive ? 'active-link' : '')}>
         Reports
       </NavLink> */}

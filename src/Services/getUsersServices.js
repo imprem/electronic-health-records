@@ -85,3 +85,17 @@ export const getDoctorDetailsByAddress = async (doctorAddress) => {
     const doctor = await deployedEHRContract.getDoctorDetails(doctorAddress);
     return doctor;
 }
+
+export const getAllAppointment = async () => {
+    console.log('### Get All get all Appointment :: ');
+    const appointment = await deployedAppointmentManager.getScheduledAppointments();
+    return appointment;
+}
+
+export const deleteMedicalRecord = async (index) => {
+    console.log('### Delete record :: ');
+    console.log('### Delete record by index :: ', index);
+    console.log('Patient Address :: ', userAddress);
+
+    const response = await deployedEHRContract.deleteMedicalRecord(userAddress, index);
+} 

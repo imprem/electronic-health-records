@@ -268,3 +268,28 @@ export const AddNewPatient = async (formData) => {
         return { success: false, error: errorMessage };
     }
 };
+
+export const addTestResult = async (patientAddress, ipfs_hash_code) => {
+    console.log("###Add hash code to medical report!!")
+    console.log('Patient Address :: ', patientAddress);
+    console.log('ipfs hash code  :: ', ipfs_hash_code);
+
+    try{
+        const txResponse = await deployedEHRContract.addMedicalRecord(
+            patientAddress,
+            ipfs_hash_code,
+            {
+                gasLimit: 500000, // Optional, adjust as needed
+            }
+        );
+        await txResponse.wait();
+        console.log('Transaction hash:', txResponse.hash);
+
+        return {
+            success: true,
+            txHash: txResponse.hash,
+        };
+    }catch(error){
+        return error;
+    }
+}
